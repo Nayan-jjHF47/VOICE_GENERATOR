@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceCraft</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: wheat; /* Light gray background color */
+        }
+
+        h1 {
+            text-align: center;
+            color: maroon; /* Dark gray text color */
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 5px;
+        }
+
+        button, select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: orange; /* Green button color */
+            color: #fff; /* White text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover, select:hover {
+            background-color: #95a045; /* Darker green on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>VoiceCraft</h1>
+
+    <label for="textInput">Enter text:</label>
+    <textarea id="textInput" rows="4" placeholder="Type text here..."></textarea>
+
+    <label for="voiceType">Select Voice Type:</label>
+    <select id="voiceType">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="cartoon">Cartoon</option>
+    </select>
+
+    <button onclick="generateVoice()">Generate Voice</button>
+
+    <script>
+        function generateVoice() {
+            var textInput = document.getElementById('textInput').value;
+            if (!textInput.trim()) {
+                alert('Please enter text before generating voice.');
+                return;
+            }
+
+            var voiceType = document.getElementById('voiceType').value;
+            var utterance = new SpeechSynthesisUtterance();
+            utterance.text = textInput;
+
+            // Choose a voice based on the selected type
+            var voices = window.speechSynthesis.getVoices();
+            switch (voiceType) {
+                case 'male':
+                    utterance.voice = findVoiceByGender(voices, 'male');
+                    break;
+                case 'female':
+                    utterance.voice = findVoiceByGender(voices, 'female');
+                    break;
+                case 'cartoon':
+                    // You can add specific conditions for cartoon voices
+                    // For now, just use the default voice
+                    break;
+                default:
+                    utterance.voice = voices[0]; // Use default if no match
+                    break;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function findVoiceByGender(voices, gender) {
+            // Filter voices based on gender
+            return voices.find(voice => voice.gender === gender) || voices[0];
+        }
+    </script>
+</body>
+
+</html>
